@@ -6,6 +6,7 @@ import validateEmail from "../helpers/validateEmail.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import generateAccessAndRefreshTokens from "../helpers/generateAccessAndRefreshTokens.js";
+import { Resume } from "../models/Resume.js";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -235,11 +236,23 @@ const getUserById = async (req, res) => {
   }
 }
 
+const getUserResumes = async(req, res) => {
+  try{
+    const userId = req.userId;
+    const resumes = await Resume.find({userId})
+    return res.status(200).json({resumes})
+  }
+  catch(error){
+    return res.status(400).json({message: error.message})
+  }
+}
+
 export default 
 {
   registerUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
-  getUserById
+  getUserById,
+  getUserResumes,
 }
