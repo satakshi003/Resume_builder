@@ -4,7 +4,8 @@ import {refreshAccessToken} from "../controllers/userController.js"
 import {registerUser,
   loginUser,
   logoutUser,
-  getUserById
+  getUserById,
+  getUserResumes
 } from "../controllers/userController.js"
 
 const router = Router();
@@ -18,5 +19,6 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken) // it uses refresh token.
 router.route("/data").get(verifyJWT, getUserById)
+router.route("/resumes").get(verifyJWT, getUserResumes )
 
 export default router;
