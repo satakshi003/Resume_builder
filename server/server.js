@@ -2,7 +2,9 @@ import express from 'express';
 import cors from "cors";
 import "dotenv/config";
 import connectDB from './config/db.js';
-
+import userRouter from "../server/Routes/userRoutes.js"
+import resumeRouter from "../server/Routes/resumeRoutes.js"
+import aiRouter from "../server/Routes/aiRoutes.js"
 
 const app = express();
 const PORT =  process.env.PORT || 3000;
@@ -14,8 +16,11 @@ app.use(cors())
 
 app.get('/', (req, res) => res.send("Server is live..."))
 
-import userRouter from "../server/Routes/userRoutes.js"
+
 app.use('/api/users', userRouter)
+app.use('/api/resumes', resumeRouter)
+app.use('api/ai', aiRouter)
+
 
 
 app.listen(PORT, ()=> {
