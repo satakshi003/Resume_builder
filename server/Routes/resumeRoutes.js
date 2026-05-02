@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middlewares/auth.middleware";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {createResume, updateResume, deleteResume, getResumeById, getPublicResumeById} from "../controllers/resumeController.js"
 import { upload } from "../config/multer.js";
 

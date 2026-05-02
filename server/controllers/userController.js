@@ -9,7 +9,7 @@ import generateAccessAndRefreshTokens from "../helpers/generateAccessAndRefreshT
 import { Resume } from "../models/Resume.js";
 
 
-const registerUser = asyncHandler(async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
   //validation - not empty
   //check if user already exists: username, email
@@ -25,7 +25,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (
       
       !username?.trim() ||
-      !email?.trim() |
+      !email?.trim() ||
       !password?.trim() ||
       !confirmPassword?.trim()
 
@@ -77,7 +77,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 });
 
-const loginUser = asyncHandler(async (req, res) => {
+export const loginUser = asyncHandler(async (req, res) => {
   //req body -> data from frontend
   //username or email
   //find the user
@@ -85,7 +85,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //generate access token and refresh token
   //send cookies
   //send success response
-  const { email,  password } = req.body;
+  const {username, email,  password } = req.body;
   
   if (!username && !email) {
     throw new ApiError(400, "Username or email is required");
@@ -104,7 +104,7 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
   
-  const loggedInUser = await User.findById(user._id).select(
+   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
   );
   
@@ -129,7 +129,7 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-const logoutUser = asyncHandler (
+export const logoutUser = asyncHandler (
   async (req, res) => {
     //get refresh token from cookies
     //if not present, throw error
@@ -162,7 +162,7 @@ const logoutUser = asyncHandler (
   }
 );
 
-const refreshAccessToken = asyncHandler(async (req, res) => {
+export const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken 
 
   if(!incomingRefreshToken){
@@ -211,11 +211,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 }
 )
 
-const getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   try{
     const userId = req.user._id;
 
-    const user = await User.findById(user._id)
+    const user = await User.findById(userId)
     if(!user){
       return res.status(404).json(
         {
@@ -236,7 +236,7 @@ const getUserById = async (req, res) => {
   }
 }
 
-const getUserResumes = async(req, res) => {
+export const getUserResumes = async(req, res) => {
   try{
     const userId = req.userId;
     const resumes = await Resume.find({userId})
@@ -247,12 +247,4 @@ const getUserResumes = async(req, res) => {
   }
 }
 
-export default 
-{
-  registerUser,
-  loginUser,
-  logoutUser,
-  refreshAccessToken,
-  getUserById,
-  getUserResumes,
-}
+

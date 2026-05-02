@@ -1,6 +1,6 @@
+import "dotenv/config";
 import express from 'express';
 import cors from "cors";
-import "dotenv/config";
 import connectDB from './config/db.js';
 import userRouter from "../server/Routes/userRoutes.js"
 import resumeRouter from "../server/Routes/resumeRoutes.js"
@@ -19,7 +19,7 @@ app.get('/', (req, res) => res.send("Server is live..."))
 
 app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
-app.use('api/ai', aiRouter)
+app.use('/api/ai', aiRouter)
 
 
 

@@ -20,7 +20,7 @@ const ResumeSchema = new Schema(
       type: String,
       default: "classic"
     },
-    template: {
+    theme_color: {
       type: String,
       default: "#3B82F6"
     },

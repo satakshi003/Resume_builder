@@ -2,7 +2,7 @@ import { Resume } from "../models/Resume.js"
 import ai from "../config/ai.js";
 
 
-const enhanceProfessionalSummary = async (req, res) => {
+export const enhanceProfessionalSummary = async (req, res) => {
   try{
     const {userContent} = req.body;
 
@@ -33,7 +33,7 @@ const enhanceProfessionalSummary = async (req, res) => {
   }
 }
 
-const enhanceJobDescription = async (req, res) => {
+export const enhanceJobDescription = async (req, res) => {
   try{
     const {userContent} = req.body;
 
@@ -64,7 +64,7 @@ const enhanceJobDescription = async (req, res) => {
   }
 }
 
-const uploadResume = async (req, res) => {
+export const uploadResume = async (req, res) => {
   try{
     const {resumeText, title} = req.body;
     const userId = req.userId;
@@ -75,9 +75,9 @@ const uploadResume = async (req, res) => {
 
     const systemPrompt = "You are a expert AI Agent to extract data from resume."
 
-    const userPrompt = `extract data from this resume: ${resumeText}`
+    const userPrompt = `Extract data from this resume: ${resumeText}
 
-    `Provide data in the following JSON format with no additional text before or after:
+    Provide data in the following JSON format with no additional text before or after:
     {
       professional_summary: {
       type: String,
@@ -126,7 +126,7 @@ const uploadResume = async (req, res) => {
       }
     ]
     }
-    `
+    `;
 
     const response = await ai.chat.completions.create({
     model: process.env.OPENAI_MODEL,
@@ -153,9 +153,4 @@ const uploadResume = async (req, res) => {
   }
 }
 
-export default {
-  enhanceProfessionalSummary,
-  enhanceJobDescription,
-  uploadResume
-}
 

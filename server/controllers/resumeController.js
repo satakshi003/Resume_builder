@@ -10,7 +10,7 @@ import { Resume } from "../models/Resume.js";
 import imagekit from "../config/imagekit.js";
 import fs from 'fs';
 
-const createResume = async (req, res) => {
+export const createResume = async (req, res) => {
   try{
     const userId = req.userId;
     const {title} = req.body;
@@ -29,7 +29,7 @@ const createResume = async (req, res) => {
   }
 }
 
-const deleteResume = async (req, res) => {
+export const deleteResume = async (req, res) => {
   try{
     const userId = req.userId;
     const {resumeId} = req.params;
@@ -47,7 +47,7 @@ const deleteResume = async (req, res) => {
   }
 }
 
-const getResumeById = async (req, res) => {
+export const getResumeById = async (req, res) => {
   try{
     const userId = req.userId;
     const {resumeId} = req.params;
@@ -60,13 +60,14 @@ const getResumeById = async (req, res) => {
       return res.status(404).json({
         message: "Resume not found"
       })
+    }
 
     //Hide unnecessary/internal fields from frontend  
     resume.__v = undefined;
     resume.createdAt = undefined;
     resume.updatedAt = undefined;
 
-    }
+    
     return res.status(200).json({
       resume
     })
@@ -76,7 +77,7 @@ const getResumeById = async (req, res) => {
   }
 }
 
-const getPublicResumeId = async (req, res) => {
+export const getPublicResumeById = async (req, res) => {
   try{
     const {resumeId} = req.params;
     const resume = await Resume.findOne({public: true, _id: resumeId})
@@ -90,7 +91,7 @@ const getPublicResumeId = async (req, res) => {
   }
 }
 
-const updateResume = async (req, res) => {
+export const updateResume = async (req, res) => {
   try{
      const userId = req.userId;
      const {resumeId, resumeData, removeBackground} = req.body
@@ -102,7 +103,7 @@ const updateResume = async (req, res) => {
 
       const imageBufferData = fs.createReadStream(image.path)
       
-        const response = await imagekit.files.upload({
+        const response = await imagekit.upload({
           file: imageBufferData,
           fileName: "resume.png",
           folder: "user-resumes",
@@ -114,7 +115,7 @@ const updateResume = async (req, res) => {
         resumeDataCopy.personal_info.image = response.url
      }
 
-     const resume = await Resume.findByIdAndUpdate({userId, _id: resumeId}, resumeDataCopy, {new: true})
+     const resume = await Resume.findOneAndUpdate({userId, _id: resumeId}, resumeDataCopy, {new: true})
 
      return res.status(200).json({message: 'Saved successfully', resume})
   }
@@ -123,10 +124,4 @@ const updateResume = async (req, res) => {
   }
 }
 
-export default {
-  createResume,
-  deleteResume,
-  getResumeById,
-  getPublicResumeId,
-  updateResume
-}
+
