@@ -1,7 +1,7 @@
 import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User } from "lucide-react";
 import React from "react";
 
-const PersonalInfoForm = ({data, onChange, removeBackground, setBackground}) => {
+const PersonalInfoForm = ({data, onChange, removeBackground, setRemoveBackground}) => {
 
   const handleChange = (field, value ) => {
     onChange({...data, [field]: value})

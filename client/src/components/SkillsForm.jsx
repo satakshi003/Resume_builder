@@ -1,6 +1,5 @@
 import { Plus, Sparkle, X } from "lucide-react";
-import {React, useState, useEffect}  from "react";
-
+import React, { useState, useEffect } from "react";
 const SkillsForm = ({data, onChange}) => {
   const [newSkill, setNewSkill] = useState("")
 
@@ -35,7 +34,7 @@ const SkillsForm = ({data, onChange}) => {
         value={newSkill}
         onKeyDown={handleKeyPress}
          />
-         <button onClick={addSkill} disabled={!newSkill.trim} className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+         <button onClick={addSkill} disabled={!newSkill.trim()} className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
           <Plus className="size-4" /> Add
        </button>
  </div>

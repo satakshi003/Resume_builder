@@ -36,7 +36,7 @@ const ResumeBuilder = () => {
 
   const loadExistingResume = async () => {
     try{
-      const {data} = await api.get('/api/resumes/get' + resumeId)
+      const {data} = await api.get('/api/resumes/get/' + resumeId)
       if(data.resume){
         setResumeData(data.resume)
         document.title = data.resume.title;
@@ -64,9 +64,6 @@ const ResumeBuilder = () => {
 
   const activeSection = sections[activeSectionIndex]
 
-  useEffect(()=>{
-    loadExistingResume()
-  }, [])
 
   const changeResumeVisibility = async () => {
    try{
@@ -109,7 +106,7 @@ const ResumeBuilder = () => {
       formData.append("resumeId", resumeId)
       formData.append('resumeData', JSON.stringify(updatedResumeData))
       removeBackground && formData.append("removeBackground", "yes");
-      typeof resumeData.personal_info.image === 'object' && formData.append("Image", resumeData.personal_info.image)
+      typeof resumeData.personal_info.image === 'object' && formData.append("image", resumeData.personal_info.image)
 
       const {data} = await api.put('/api/resumes/update', formData)
 
@@ -161,7 +158,7 @@ const ResumeBuilder = () => {
                   {/* Form Content */}
                   <div className='space-y-6'>
                     {activeSection.id === 'personal' && (
-                      <PersonalInfoForm data={resumeData.personal_info} onChange={(data) => setResumeData(prev => ({...prev, personal_info: data}))} removeBackground={removeBackground}setRemoveBackground={setRemoveBackground} />
+                      <PersonalInfoForm data={resumeData.personal_info} onChange={(data) => setResumeData(prev => ({...prev, personal_info: data}))} removeBackground={removeBackground} setRemoveBackground={setRemoveBackground} />
                     )}
                     {activeSection.id === 'summary' && (
                       <ProfessionalSummaryForm data={resumeData.professional_summary} onChange={(data) => setResumeData(prev => ({...prev, professional_summary: data}))} setResumeData={setResumeData} />

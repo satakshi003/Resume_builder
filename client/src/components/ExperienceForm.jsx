@@ -40,7 +40,7 @@ const ExperienceForm = ({ data, onChange }) => {
 
     try{
       const {data} = await api.post('api/ai/enhance-job-desc', {userContent: prompt})
-      updateExperience(index, "description", data.enhanceContent)
+      updateExperience(index, "description", data.enhancedContent)
     }catch(error){
       toast.error(error.message)
     }
@@ -106,9 +106,9 @@ const ExperienceForm = ({ data, onChange }) => {
           </label>
 
           <div className='space-y-2'>
-            <div className='flex items-center justigy-between'>
+            <div className='flex items-center justify-between'>
               <label className='text-sm font-medium text-gray-700'>Job Description</label>
-              <button onClick={() => generateDescription(index)} disabled={generatingIndex === index || !experience.position || !experience.company} className='flex items-center gap-1 px-2 py-1 texts-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50'>
+              <button onClick={() => generateDescription(index)} disabled={generatingIndex === index || !experience.position || !experience.company} className='flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50'>
                 {generatingIndex === index ? (
                   <Loader2 className='w-3 h-3 animate-spin' />
                 ) : (

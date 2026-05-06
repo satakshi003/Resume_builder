@@ -15,15 +15,17 @@ const Login = () => {
     const [formData, setFormData] = React.useState({
         username: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: '' 
     })
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
             const {data} = await api.post(`/api/users/${state}`, formData)
-            dispatch(login({ token: data.data.accessToken, user: data.data.user }))
-            localStorage.setItem('token', data.token)
+            const accessToken = data.data.accessToken
+            dispatch(login({ token: accessToken, user: data.data.user }))
+            localStorage.setItem('token', accessToken)
             toast.success(data.message)
         }catch(error){
             toast(error?.response?.data?.message || error.message)
@@ -43,7 +45,7 @@ const Login = () => {
                 {state !== "login" && (
                     <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
                         <User2Icon  size={16} color='#6B7280'/>
-                        <input type="text" name="username" placeholder="Username" className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
+                        <input type="text" name="username" placeholder="Username" className="border-none outline-none ring-0" value={formData.username} onChange={handleChange} required />
                     </div>
                 )}
                 <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
@@ -54,6 +56,12 @@ const Login = () => {
                     <Lock size={13} color='#6B7280' />
                     <input type="password" name="password" placeholder="Password" className="border-none outline-none ring-0" value={formData.password} onChange={handleChange} required />
                 </div>
+                {state !== "login" && (
+                <div className="flex items-center mt-4 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
+                    <Lock size={13} color='#6B7280' />
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" className="border-none outline-none ring-0" value={formData.confirmPassword} onChange={handleChange} required />
+                </div>
+            )}
                 <div className="mt-4 text-left text-green-500">
                     <button className="text-sm" type="reset">Forget password?</button>
                 </div>
