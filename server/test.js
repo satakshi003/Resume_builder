@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import userRouter from "./Routes/userRoutes.js"
 import resumeRouter from "./Routes/resumeRoutes.js"
-import aiRouter from "./Routes/aiRoutes.js"
+import aiRouter from "./Routes/aiRoutes.js"  // ← add this
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,12 +25,10 @@ app.use((req, res, next) => {
 app.use(cookieParser())
 app.use(express.json())
 
-app.get('/', (req, res) => res.send("Server is live..."))
-
 app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
-app.use('/api/ai', aiRouter)
+app.use('/api/ai', aiRouter)  // ← add this
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 })

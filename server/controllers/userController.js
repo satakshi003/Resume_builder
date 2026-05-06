@@ -238,7 +238,7 @@ export const getUserById = async (req, res) => {
 
 export const getUserResumes = async(req, res) => {
   try{
-    const userId = req.userId;
+    const userId = req.user._id;
     const resumes = await Resume.find({userId})
     return res.status(200).json({resumes})
   }

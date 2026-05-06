@@ -12,6 +12,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error("Token generation error:", error)
     throw new ApiError(500, "Could not generate tokens");
   }
 };

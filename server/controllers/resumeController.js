@@ -12,7 +12,7 @@ import fs from 'fs';
 
 export const createResume = async (req, res) => {
   try{
-    const userId = req.userId;
+    const userId = req.user._id;
     const {title} = req.body;
 
     const newResume = await Resume.create({
@@ -31,7 +31,7 @@ export const createResume = async (req, res) => {
 
 export const deleteResume = async (req, res) => {
   try{
-    const userId = req.userId;
+    const userId = req.user._id;
     const {resumeId} = req.params;
 
     await Resume.findOneAndDelete({
@@ -49,7 +49,7 @@ export const deleteResume = async (req, res) => {
 
 export const getResumeById = async (req, res) => {
   try{
-    const userId = req.userId;
+    const userId = req.user._id;
     const {resumeId} = req.params;
 
     const resume = await Resume.findOne({
@@ -93,12 +93,12 @@ export const getPublicResumeById = async (req, res) => {
 
 export const updateResume = async (req, res) => {
   try{
-     const userId = req.userId;
+     const userId = req.user._id;
      const {resumeId, resumeData, removeBackground} = req.body
      const image = req.file;
 
      let resumeDataCopy;
-     if(typeOf (resumeData) === 'string'){
+     if(typeof (resumeData) === 'string'){
         resumeDataCopy = JSON.parse(resumeData); //Backend receives JSON as string → needs parsing
      }else{
       resumeDataCopy = structuredClone(resumeData)
@@ -113,7 +113,7 @@ export const updateResume = async (req, res) => {
           fileName: "resume.png",
           folder: "user-resumes",
           transformation: {
-            pre: 'w-300, h-300, fo-face, z-0.75' + (removeBackground ? 'e-bgremove': '')
+            pre: 'w-300, h-300, fo-face, z-0.75' + (removeBackground ? ',e-bgremove': '')
           }
         });
 
