@@ -1,6 +1,9 @@
 import { Briefcase, Loader2, Plus, Sparkles, Trash2 } from 'lucide-react'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useState } from 'react'
+import api from '../configs/api'
+import toast from 'react-hot-toast'
 
 const ExperienceForm = ({ data, onChange }) => {
 
@@ -36,7 +39,7 @@ const ExperienceForm = ({ data, onChange }) => {
     const prompt = `enhance this job description ${experience.description} for the position of ${experience.position} at ${experience.company}.`
 
     try{
-      const {data} = await api.post('api/ai/enhance-job-desc', {userContent: prompt}, {headers: {Authorization: token}})
+      const {data} = await api.post('api/ai/enhance-job-desc', {userContent: prompt})
       updateExperience(index, "description", data.enhanceContent)
     }catch(error){
       toast.error(error.message)

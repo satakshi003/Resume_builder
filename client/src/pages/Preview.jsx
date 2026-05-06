@@ -4,6 +4,7 @@ import { dummyResumeData } from '../assets/assets';
 import ResumePreview from '../components/ResumePreview';
 import { ArrowLeftIcon } from 'lucide-react';
 import  Loader  from '../components/Loader';
+import api from '../configs/api'
 
 const Preview = () => {
   const {resumeId} = useParams();

@@ -12,6 +12,8 @@ import EducationForm from '../components/EducationForm'
 import ProjectForm from '../components/ProjectForm'
 import SkillsForm from '../components/SkillsForm'
 import { useSelector } from 'react-redux'
+import api from '../configs/api'
+import toast from 'react-hot-toast'
 
 const ResumeBuilder = () => {
 
@@ -34,9 +36,7 @@ const ResumeBuilder = () => {
 
   const loadExistingResume = async () => {
     try{
-      const {data} = await api.get('/api/resumes/get' + resumeId, {headers: {
-        Authorization: token
-      }})
+      const {data} = await api.get('/api/resumes/get' + resumeId)
       if(data.resume){
         setResumeData(data.resume)
         document.title = data.resume.title;
@@ -74,9 +74,7 @@ const ResumeBuilder = () => {
     formData.append("resumeId", resumeId)
     formData.append("resumeData", JSON.stringify({public: !resumeData.public}))
 
-    const {data} = await api.put('/api/resumes/update', formData,  {headers: {
-      Authorization: token
-    }})
+    const {data} = await api.put('/api/resumes/update', formData)
     setResumeData({...resumeData, public: !resumeData.public})
     toast.success(data.message)
    }catch(error){
@@ -104,7 +102,7 @@ const ResumeBuilder = () => {
       let updatedResumeData = structuredClone(resumeData)
 
       //remove image from updatedResumeData
-      if(typeOf (resumeData.personal_info.image) === 'object'){
+      if(typeof (resumeData.personal_info.image) === 'object'){
         delete updatedResumeData.personal_info.image
       }
       const formData = new FormData();
@@ -113,9 +111,7 @@ const ResumeBuilder = () => {
       removeBackground && formData.append("removeBackground", "yes");
       typeof resumeData.personal_info.image === 'object' && formData.append("Image", resumeData.personal_info.image)
 
-      const {data} = await api.put('/api/resumes/update', formData, {headers: {
-        Authorization: token
-      }})
+      const {data} = await api.put('/api/resumes/update', formData)
 
       setResumeData(data.resume)
       toast.success(data.message)
