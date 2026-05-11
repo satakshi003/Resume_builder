@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { dummyResumeData } from '../assets/assets'
-import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, DownloadCloud, EyeIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkle, User } from 'lucide-react'
+import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, DownloadCloud, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkle, User } from 'lucide-react'
 import PersonalInfoForm from '../components/PersonalInfoForm'
 import ResumePreview from '../components/ResumePreview'
 import TemplateSelector from '../components/TemplateSelector'
@@ -114,6 +114,7 @@ const ResumeBuilder = () => {
       toast.success(data.message)
     }catch(error){
       console.error("Error saving resume:", error)
+       console.error("Error saving resume:", error.response?.data) 
     }
   }
 
@@ -183,7 +184,7 @@ const ResumeBuilder = () => {
                       
 
                   </div>
-                  <button onClick={() => {toast.promise(saveResume, {loading: 'Saving...'})}}className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
+                  <button onClick={() => {toast.promise(saveResume(), {loading: 'Saving...'})}}className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
                     Save Changes
                   </button>
 
@@ -204,7 +205,7 @@ const ResumeBuilder = () => {
                   to-purple-200
                   text-purple-600
                   ring-purple-300 rounded-lg hover:ring transition-colors '>
-                    {resumeData.public ? <EyeIcon className='size-4' /> : <EyeIcon className='size-4' />}
+                    {resumeData.public ? <EyeIcon className='size-4' /> : <EyeOffIcon className='size-4' />}
                     {resumeData.public ? 'Public' : 'Private'}
                   </button>
                   <button onClick={downloadResume}className='flex items-center gap-2 px-6 py-2 text-xs bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-lg ring-green-300 hover:ring transition-colors'>

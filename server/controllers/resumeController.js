@@ -103,12 +103,17 @@ export const updateResume = async (req, res) => {
      }else{
       resumeDataCopy = structuredClone(resumeData)
      }
+     if (resumeDataCopy.accent_color) {
+      resumeDataCopy.theme_color = resumeDataCopy.accent_color;
+      delete resumeDataCopy.accent_color;
+    }
+
 
      if(image){
 
       const imageBufferData = fs.createReadStream(image.path)
       
-        const response = await imagekit.upload({
+        const response = await imagekit.files.upload({
           file: imageBufferData,
           fileName: "resume.png",
           folder: "user-resumes",
@@ -118,6 +123,10 @@ export const updateResume = async (req, res) => {
         });
 
         resumeDataCopy.personal_info.image = response.url
+
+         fs.unlink(image.path, (err) => {
+        if(err) console.error('Temp file cleanup failed', err)
+      })
      }
 
      const resume = await Resume.findOneAndUpdate({userId, _id: resumeId}, resumeDataCopy, {new: true})
