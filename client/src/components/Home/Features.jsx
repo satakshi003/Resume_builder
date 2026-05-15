@@ -1,61 +1,141 @@
 import React from 'react'
-import { Zap } from 'lucide-react';
+import { Sparkles, FileCheck, Eye, Wand2, LayoutTemplate } from 'lucide-react';
 import Title from './Title';
+import { motion } from 'framer-motion';
 
 const Features = () => {
-  const [isHover, setIsHover] = React.useState(false);
   return (
-      <div id='features' className='flex flex-col items-center my-10 scroll-mt-12'>
-
-          <div className="flex items-center gap-2 text-sm text-green-800 bg-green-400/10 border border-green-200 rounded-full px-6 py-1.5">
-            <Zap width={14} />
-            <span>Simple Process</span>
+    <div id='features' className='flex flex-col items-center py-24 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-24 scroll-mt-20'>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-brand-600 text-xs font-semibold mb-6 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Powerful Features</span>
         </div>
 
-        <Title title="Build your resume" description="Our streamlined process helps you create a professional resume in minutes with intelligent AI-powered tools and features." />
+        <Title 
+            title="Everything you need to land the job" 
+            description="Our intelligent builder equips you with cutting-edge tools to create a standout, professional resume in minutes." 
+        />
 
-            <div className="flex flex-col md:flex-row items-center xl:-mt-10 justify-center">
-                <img className="max-w-2xl w-full xl:-ml-32" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/features/group-image-1.png" alt="" />
-                <div className="px-4 md:px-0" onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
-                    <div className={"flex items-center justify-center gap-6 max-w-md group cursor-pointer"}>
-                        <div className={`p-6 group-hover:bg-violet-100 border border-transparent group-hover:border-violet-300  flex gap-4 rounded-xl transition-colors ${!isHover ? 'border-violet-300 bg-violet-100' : ''}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-6 stroke-violet-600"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>
-                            <div className="space-y-2">
-                                <h3 className="text-base font-semibold text-slate-700">Real-Time Analytics</h3>
-                                <p className="text-sm text-slate-600 max-w-xs">Get instant insights into your finances with live dashboards.</p>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mt-16">
+            
+            {/* Feature 1: AI Assistant (Large Card) */}
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="md:col-span-2 md:row-span-2 glass-card rounded-[2rem] p-8 md:p-12 relative overflow-hidden group cursor-default border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(99,102,241,0.1)] transition-all duration-500 bg-white"
+            >
+                {/* Background Gradient */}
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 group-hover:bg-brand-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10 w-full md:w-3/5">
+                    <div className="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-6 text-brand-600 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                        <Wand2 className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold font-heading text-gray-900 mb-3">AI-Powered Writing</h3>
+                    <p className="text-text-secondary leading-relaxed">
+                        Struggling to find the right words? Our fine-tuned AI instantly generates highly-effective summaries and action-driven bullet points tailored to your industry.
+                    </p>
+                </div>
+
+                {/* Layered UI Preview */}
+                <div className="absolute -bottom-6 -right-6 md:bottom-12 md:-right-10 w-[300px] h-[240px] perspective-[1000px] z-10 pointer-events-none hidden sm:block">
+                    <div className="relative w-full h-full transform-gpu rotate-y-[-10deg] rotate-x-[5deg] group-hover:rotate-y-[0deg] group-hover:rotate-x-[0deg] group-hover:-translate-y-4 transition-all duration-700 ease-out">
+                        {/* Editor Mockup */}
+                        <div className="absolute inset-0 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden">
+                            <div className="h-8 bg-gray-50 border-b border-gray-100 flex items-center px-4">
+                                <div className="h-2 w-16 bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                <div className="h-2 w-full bg-gray-100 rounded"></div>
+                                <div className="h-2 w-5/6 bg-gray-100 rounded"></div>
+                                <div className="h-2 w-4/6 bg-brand-50 rounded"></div>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-6 max-w-md group cursor-pointer">
-                        <div className="p-6 group-hover:bg-green-100 border border-transparent group-hover:border-green-300 flex gap-4 rounded-xl transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-6 stroke-green-600"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z" /></svg>
-                            <div className="space-y-2">
-                                <h3 className="text-base font-semibold text-slate-700">Bank-Grade Security</h3>
-                                <p className="text-sm text-slate-600 max-w-xs">End-to-end encryption, 2FA, compliance with GDPR standards.</p>
+                        {/* AI Popup Overlay */}
+                        <div className="absolute -left-12 top-1/2 -translate-y-1/2 bg-white rounded-lg shadow-[0_10px_40px_-10px_rgba(99,102,241,0.3)] border border-brand-100 p-3 w-[220px] translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                            <div className="flex items-center gap-2 mb-2">
+                                <Sparkles className="w-3.5 h-3.5 text-brand-500" />
+                                <span className="text-[10px] font-bold text-brand-600">AI Suggestion</span>
                             </div>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-6 max-w-md group cursor-pointer">
-                        <div className="p-6 group-hover:bg-orange-100 border border-transparent group-hover:border-orange-300 flex gap-4 rounded-xl transition-colors">
-                            <svg className="size-6 stroke-orange-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 15V3" /><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /></svg>
-                            <div className="space-y-2">
-                                <h3 className="text-base font-semibold text-slate-700">Customizable Reports</h3>
-                                <p className="text-sm text-slate-600 max-w-xs">Export professional, audit-ready financial reports for tax or internal review.</p>
-                            </div>
+                            <p className="text-[10px] text-gray-600 leading-tight">Led a cross-functional team of 10 to deploy scalable web architectures...</p>
+                            <div className="mt-2 h-6 w-full bg-brand-50 rounded flex items-center justify-center text-[10px] text-brand-600 font-medium">Apply Suggestion</div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-            
-                * {
-                    font-family: 'Poppins', sans-serif;
-                }
-            `}</style>
+            </motion.div>
+
+            {/* Feature 2: ATS Optimized (Top Right) */}
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="glass-card rounded-[2rem] p-8 relative overflow-hidden group cursor-default border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(139,92,246,0.1)] transition-all duration-500 bg-white flex flex-col justify-between min-h-[300px]"
+            >
+                <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-violet-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-violet-500/20 transition-colors duration-500"></div>
+                
+                <div className="relative z-10">
+                    <div className="w-12 h-12 rounded-2xl bg-violet-50 border border-violet-100 flex items-center justify-center mb-6 text-violet-600 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                        <FileCheck className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-2">ATS Optimized</h3>
+                    <p className="text-sm text-text-secondary leading-relaxed">
+                        Tested against top Applicant Tracking Systems to ensure your resume gets parsed perfectly every time.
+                    </p>
+                </div>
+
+                {/* ATS Visual */}
+                <div className="relative mt-8 h-16 w-full flex items-center justify-end">
+                    <div className="flex items-center gap-3 bg-white shadow-lg border border-gray-100 rounded-full px-4 py-2 translate-x-4 group-hover:translate-x-0 transition-transform duration-500 ease-out">
+                        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                            <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                        </div>
+                        <span className="text-sm font-bold text-gray-900 pr-2">100% Match</span>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Feature 3: Live Preview (Bottom Right) */}
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="glass-card rounded-[2rem] p-8 relative overflow-hidden group cursor-default border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(56,189,248,0.1)] transition-all duration-500 bg-white flex flex-col justify-between min-h-[300px]"
+            >
+                <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-sky-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-sky-500/20 transition-colors duration-500"></div>
+
+                <div className="relative z-10">
+                    <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center mb-6 text-sky-600 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                        <Eye className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-2">Live Preview</h3>
+                    <p className="text-sm text-text-secondary leading-relaxed">
+                        Watch your resume come to life as you type. Real-time rendering ensures no surprises upon export.
+                    </p>
+                </div>
+
+                {/* Preview Visual */}
+                <div className="relative mt-8 h-20 w-full">
+                    <div className="absolute right-0 bottom-0 w-[120px] h-[100px] bg-white shadow-xl border border-gray-200 rounded-t-xl overflow-hidden translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                        <div className="bg-sky-600 h-6 w-full"></div>
+                        <div className="p-2 space-y-1.5">
+                            <div className="h-1.5 w-full bg-gray-100 rounded"></div>
+                            <div className="h-1.5 w-4/5 bg-gray-100 rounded"></div>
+                            <div className="h-1.5 w-full bg-gray-100 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+
         </div>
+    </div>
   )
 }
 
 export default Features;
+
 
