@@ -49,7 +49,7 @@ const Navbar = () => {
                   <Sparkles className="w-5 h-5 text-white relative z-10" />
                 </div>
                 <span className="text-xl font-bold font-heading tracking-tight text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-600 group-hover:to-violet-600 transition-all duration-300">
-                  ResumeAI
+                  VeloraCV
                 </span>
               </Link>
               
@@ -60,10 +60,7 @@ const Navbar = () => {
                     <LayoutDashboard className="w-4 h-4 text-gray-400 group-hover:text-brand-500 transition-colors" />
                     Dashboard
                   </Link>
-                  <Link to="/templates" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors flex items-center gap-2 group outline-none">
-                    <FileText className="w-4 h-4 text-gray-400 group-hover:text-brand-500 transition-colors" />
-                    Templates
-                  </Link>
+                  
                 </nav>
               )}
             </div>

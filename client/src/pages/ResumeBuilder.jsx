@@ -119,108 +119,213 @@ const ResumeBuilder = () => {
   }
 
   return (
-    <div>
-       
-        <div className='max-w-7xl mx-auto px-4 tpy-6'>
-          <Link to={'/app'} className='inline-flex gap-2 items-center text-slate-500 hover:text-slate-700 transition-all'>
-            <ArrowLeftIcon className='size-4' /> Back to Dashboard
-          </Link>
-        </div>
+    <div className='min-h-screen bg-[#F8F9FB] relative overflow-hidden'>
+      {/* Ambient background glows to match dashboard */}
+      <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-brand-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-violet-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className='max-w-7xl mx-auto px-4 pb-8'>
-          <div className='grid lg:grid-cols-12 gap-8'>
-            {/* Left Panel - Form */}
-            <div className='relative lg:col-span-5 rounded-lg overflow-hidden'>
-                <div className='bg-white rounded-lg shadow-sm border border-gray-200 p-6 pt-1'>
-                  {/* Progress bar using activeSectionIndex */}
-                  <hr className='absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-600 border-none transition-all duration-2000' style={{width: `${activeSectionIndex * 100 / (sections.length - 1)}%`}} />
+      <div className='max-w-[1600px] mx-auto h-screen flex flex-col relative z-10'>
+        
+        {/* Top Header - Professional Integrated Toolbar */}
+        <header className='h-[64px] shrink-0 flex items-center justify-between px-6 bg-white/80 backdrop-blur-xl border-b border-gray-100 no-print sticky top-0 z-40 shadow-[0_1px_2px_rgba(0,0,0,0.02)]'>
+          {/* Left Section: Context & Navigation */}
+          <div className='flex items-center gap-5'>
+            <Link 
+              to={'/app'} 
+              className='flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold text-[13px] transition-all group'
+            >
+              <ArrowLeftIcon className='w-5 h-5 group-hover:-translate-x-0.5 transition-transform' /> 
+              Back
+            </Link>
+            <div className='h-4 w-px bg-gray-200' />
+            <h1 className='text-[16px] font-black text-gray-900 tracking-tight line-clamp-1 max-w-[250px]'>
+              {resumeData.title || 'Untitled Resume'}
+            </h1>
+          </div>
 
-                  {/* Section Navigation  */}
-                  <div className='flex justify-between items-center mb-6 border-b border-gray-300 py-1'>
-                    <div className='flex  items-center gap-2'>
-                      <TemplateSelector selectedTemplate={resumeData.template} onChange={(template) => setResumeData(prev => ({...prev, template}))} />
-                        <ColorPicker selectedColor={resumeData.accent_color} onChange={(color) => setResumeData(prev => ({...prev, accent_color: color}))} />
-                    </div>
-                    <div className='flex items-center'>
-                      {activeSectionIndex !== 0 && (
-                        <button onClick={() => setActiveSectionIndex((prevIndex) => Math.max(prevIndex - 1, 0))} className='flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all' disabled={activeSectionIndex === 0}>
-                          <ChevronLeft className='size-4' />Previous
-                        </button>
-                      )}
-
-                      <button onClick={() => setActiveSectionIndex((prevIndex) => Math.min(prevIndex + 1, sections.length - 1))} className= {`flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length - 1 && 'opacity-50'}`} disabled={activeSectionIndex === sections.length - 1}> Next
-                          <ChevronRight className='size-4' />
-                        </button>
-
-                    </div>
-
-                  </div>
-
-                  {/* Form Content */}
-                  <div className='space-y-6'>
-                    {activeSection.id === 'personal' && (
-                      <PersonalInfoForm data={resumeData.personal_info} onChange={(data) => setResumeData(prev => ({...prev, personal_info: data}))} removeBackground={removeBackground} setRemoveBackground={setRemoveBackground} />
-                    )}
-                    {activeSection.id === 'summary' && (
-                      <ProfessionalSummaryForm data={resumeData.professional_summary} onChange={(data) => setResumeData(prev => ({...prev, professional_summary: data}))} setResumeData={setResumeData} />
-                    )}
-                    {activeSection.id === 'experience' && (
-                      <ExperienceForm data={resumeData.experience} onChange={(data) => setResumeData(prev => ({...prev, experience: data}))} />
-                    )}
-
-                   {activeSection.id === 'education' && (
-                      <EducationForm data={resumeData.education} onChange={(data) => setResumeData(prev => ({...prev, education: data}))} />
-                    )}
-
-                    {activeSection.id === 'projects' && (
-                      <ProjectForm data={resumeData.project} onChange={(data) => setResumeData(prev => ({...prev, project: data}))} />
-                    )}
-
-                     {activeSection.id === 'skills' && (
-                      <SkillsForm data={resumeData.skills} onChange={(data) => setResumeData(prev => ({...prev, skills: data}))} />
-                    )}
-
-
-                      
-
-                  </div>
-                  <button onClick={() => {toast.promise(saveResume(), {loading: 'Saving...'})}}className='bg-gradient-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>
-                    Save Changes
-                  </button>
-
-                </div>
+          {/* Right Section: Workspace Actions */}
+          <div className='flex items-center gap-3'>
+            {/* Action Group: Sharing & Visibility */}
+            <div className="flex items-center gap-1.5 bg-gray-100/50 p-1 rounded-xl border border-gray-100">
+               <button 
+                 onClick={changeResumeVisibility}
+                 className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[11px] font-black transition-all ${
+                   resumeData.public 
+                     ? 'bg-white text-brand-600 shadow-sm border border-brand-100 ring-4 ring-brand-500/5' 
+                     : 'text-gray-500 hover:text-gray-900'
+                 }`}
+               >
+                 {resumeData.public ? <EyeIcon className='w-3.5 h-3.5' /> : <EyeOffIcon className='w-3.5 h-3.5' />}
+                 {resumeData.public ? 'Public' : 'Private'}
+               </button>
+               {resumeData.public && (
+                 <button onClick={handleShare} className='flex items-center gap-2 px-4 py-1.5 rounded-lg text-[11px] font-black text-gray-500 hover:text-gray-900 hover:bg-white/50 transition-all'>
+                   <Share2Icon className='w-3.5 h-3.5' /> Share
+                 </button>
+               )}
             </div>
 
-            {/* Right Panel - Preview */}
-            <div className='lg:col-span-7 max-lg:mt-6'>
-              <div className='relative w-full'>
-                 <div className='absolute bottom-3 left-0 right-0 flex items-center justify-end gap-2'>
-                  {resumeData.public && (
-                    <button onClick={handleShare} className='flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-blue-200 text-blue-600 rounded-lg ring-blue-300 hover:ring transition-colors'>
-                      <Share2Icon className='size-4' /> Share
+            {/* Primary Action: Export */}
+            <button 
+              onClick={downloadResume}
+              className='flex items-center gap-2.5 px-6 py-2.5 bg-gray-900 text-white rounded-xl text-[12px] font-black hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-500/20 transition-all active:scale-95'
+            >
+              <DownloadCloud className='w-4 h-4' /> Download PDF
+            </button>
+          </div>
+        </header>
 
+        {/* Main Workspace Split */}
+        <div className='flex-1 flex overflow-hidden'>
+          
+          {/* Left Panel - Sticky Editor */}
+          <div className='w-[420px] shrink-0 bg-white border-r border-gray-100 flex flex-col shadow-2xl shadow-gray-200/50 relative z-20 no-print'>
+            
+            {/* Form Section Navigation - Sticky Header */}
+            <div className='px-6 pt-6 pb-4 border-b border-gray-100 bg-white sticky top-0 z-30'>
+              <div className='flex items-center justify-between mb-5'>
+                 <div className='flex items-center gap-2'>
+                    <TemplateSelector selectedTemplate={resumeData.template} onChange={(template) => setResumeData(prev => ({...prev, template}))} />
+                    <ColorPicker selectedColor={resumeData.accent_color} onChange={(color) => setResumeData(prev => ({...prev, accent_color: color}))} />
+                 </div>
+                 
+                 <div className='flex items-center gap-2'>
+                    <button 
+                      onClick={() => setActiveSectionIndex(prev => Math.max(prev - 1, 0))}
+                      disabled={activeSectionIndex === 0}
+                      className='w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 hover:bg-gray-50 border border-transparent hover:border-gray-100 disabled:opacity-20 transition-all'
+                    >
+                      <ChevronLeft className='w-5 h-5' />
                     </button>
-                  )}
-                  <button onClick={changeResumeVisibility}className='flex items-center p-2 px-4 gap-2 text-xs bg-gradient-to-br from-purple-200
-                  to-purple-200
-                  text-purple-600
-                  ring-purple-300 rounded-lg hover:ring transition-colors '>
-                    {resumeData.public ? <EyeIcon className='size-4' /> : <EyeOffIcon className='size-4' />}
-                    {resumeData.public ? 'Public' : 'Private'}
-                  </button>
-                  <button onClick={downloadResume}className='flex items-center gap-2 px-6 py-2 text-xs bg-gradient-to-br from-green-100 to-green-200 text-green-600 rounded-lg ring-green-300 hover:ring transition-colors'>
-                    <DownloadCloud className='size-4' /> Download
-
-                  </button>
-
+                    <button 
+                      onClick={() => setActiveSectionIndex(prev => Math.min(prev + 1, sections.length - 1))}
+                      disabled={activeSectionIndex === sections.length - 1}
+                      className='h-10 px-4 rounded-xl flex items-center gap-2 bg-gray-900 text-white text-[11px] font-black uppercase tracking-wider hover:bg-brand-600 disabled:opacity-20 transition-all shadow-sm shadow-gray-200'
+                    >
+                      <span>Next</span>
+                      <ChevronRight className='w-4 h-4' />
+                    </button>
                  </div>
               </div>
-                {/* --- resume preview --- */}
-                <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} />
+
+              {/* Section Indicator */}
+              <div className='flex items-center gap-3 mb-4'>
+                 <div className='w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center'>
+                    {React.createElement(activeSection.icon, { className: 'w-4 h-4 text-brand-600' })}
+                 </div>
+                 <div>
+                    <h2 className='text-[13px] font-black text-gray-900 uppercase tracking-tight'>{activeSection.name}</h2>
+                    <p className='text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Step {activeSectionIndex + 1} of {sections.length}</p>
+                 </div>
+              </div>
+
+              {/* Step Progress Pills */}
+              <div className='flex gap-1.5'>
+                {sections.map((sec, idx) => (
+                  <div 
+                    key={sec.id}
+                    onClick={() => setActiveSectionIndex(idx)}
+                    className={`h-1.5 flex-1 rounded-full cursor-pointer transition-all duration-500 ${
+                      idx <= activeSectionIndex ? 'bg-brand-500 shadow-[0_0_10px_rgba(99,102,241,0.2)]' : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Scrollable Form Content */}
+            <div className='flex-1 overflow-y-auto px-8 py-10 custom-scrollbar bg-white'>
+              <div className='min-h-full flex flex-col'>
+                <div className='flex-1'>
+                  {activeSection.id === 'personal' && (
+                    <PersonalInfoForm 
+                      data={resumeData.personal_info} 
+                      onChange={(data) => setResumeData(prev => ({...prev, personal_info: data}))} 
+                      removeBackground={removeBackground} 
+                      setRemoveBackground={setRemoveBackground} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                  {activeSection.id === 'summary' && (
+                    <ProfessionalSummaryForm 
+                      data={resumeData.professional_summary} 
+                      onChange={(data) => setResumeData(prev => ({...prev, professional_summary: data}))} 
+                      setResumeData={setResumeData} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                  {activeSection.id === 'experience' && (
+                    <ExperienceForm 
+                      data={resumeData.experience} 
+                      onChange={(data) => setResumeData(prev => ({...prev, experience: data}))} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                  {activeSection.id === 'education' && (
+                    <EducationForm 
+                      data={resumeData.education} 
+                      onChange={(data) => setResumeData(prev => ({...prev, education: data}))} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                  {activeSection.id === 'projects' && (
+                    <ProjectForm 
+                      data={resumeData.project} 
+                      onChange={(data) => setResumeData(prev => ({...prev, project: data}))} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                  {activeSection.id === 'skills' && (
+                    <SkillsForm 
+                      data={resumeData.skills} 
+                      onChange={(data) => setResumeData(prev => ({...prev, skills: data}))} 
+                      accentColor={resumeData.accent_color} 
+                    />
+                  )}
+                </div>
+
+                <div className='pt-16 pb-6'>
+                  <button 
+                    onClick={() => {toast.promise(saveResume(), {loading: 'Saving Changes...'})}}
+                    className='w-full py-4 bg-white border border-gray-100 text-gray-900 rounded-2xl font-black text-[13px] shadow-sm hover:shadow-md hover:border-brand-200 hover:text-brand-600 transition-all active:scale-[0.98] flex items-center justify-center gap-2'
+                  >
+                    <DownloadCloud className='w-4 h-4' />
+                    Sync Progress
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
+          {/* Right Panel - Preview Canvas */}
+          <div className='flex-1 bg-[#F1F3F6] overflow-y-auto flex flex-col items-center py-12 px-6 lg:px-12 custom-scrollbar relative'>
+             {/* Subtle Radial Workspace Gradient */}
+             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent pointer-events-none" />
+             
+             {/* Preview Container - A4 Constraints with High Fidelity Shadow */}
+             <div className='w-full max-w-[820px] resume-print-wrapper a4-container transition-all duration-500 relative z-10 mb-20'>
+                <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} />
+             </div>
+
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #E5E7EB;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #D1D5DB;
+        }
+      `}</style>
     </div>
   )
 }

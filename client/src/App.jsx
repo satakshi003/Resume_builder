@@ -9,7 +9,7 @@ import Preview from './pages/Preview'
 import { useDispatch } from 'react-redux'
 import api from './configs/api'
 import {Toaster} from 'react-hot-toast'
-import { login, setLoading } from './app/features/authSlice'  
+import { login, setLoading } from './app/features/authSlice.js'  
 const App = () => {
   const dispatch = useDispatch()
 
@@ -39,6 +39,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />} />
 
+        <Route path='/login' element={<Login />} />
         <Route path='app' element=    {<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path='builder/:resumeId' element={<ResumeBuilder />} />

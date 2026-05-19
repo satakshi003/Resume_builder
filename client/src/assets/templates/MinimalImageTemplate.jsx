@@ -10,23 +10,65 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
         });
     };
 
+    const { processedImage, originalImage } = React.useMemo(() => {
+        const image = data?.personal_info?.image;
+        if (!image) return { processedImage: null, originalImage: null };
+        
+        let processed = null;
+        let original = null;
+        
+        if (typeof image === 'string') {
+            processed = image;
+            original = image.split('?')[0].replace(/\/tr:[^/]+\//, '/');
+        } else {
+            processed = URL.createObjectURL(image);
+            original = processed;
+        }
+        
+        console.log('originalImage:', original);
+        console.log('processedImage:', processed);
+        console.log('removeBackgroundResponse:', processed);
+        
+        return { processedImage: processed, originalImage: original };
+    }, [data?.personal_info?.image]);
+
     return (
         <div className="max-w-5xl mx-auto bg-white text-zinc-800">
             <div className="grid grid-cols-3">
 
                 <div className="col-span-1  py-10">
                     {/* Image */}
-                    {data.personal_info?.image && typeof data.personal_info.image === 'string' ? (
-                        <div className="mb-6">
-                            <img src={data.personal_info.image} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" style={{ background: accentColor+'70' }} />
-                        </div>
-                    ) : (
-                        data.personal_info?.image && typeof data.personal_info.image === 'object' ? (
-                            <div className="mb-6">
-                                <img src={URL.createObjectURL(data.personal_info.image)} alt="Profile" className="w-32 h-32 object-cover rounded-full mx-auto" />
+                    {processedImage ? (
+                        <div className="mb-6 flex justify-center">
+                            <div 
+                                className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center" 
+                                style={{ 
+                                    backgroundColor: accentColor,
+                                    isolation: 'isolate'
+                                }}
+                            >
+                                <img 
+                                    src={processedImage || originalImage} 
+                                    alt="Profile" 
+                                    className="w-full h-full object-cover" 
+                                    style={{ 
+                                        background: 'transparent',
+                                        mixBlendMode: 'normal',
+                                        display: 'block'
+                                    }} 
+                                    onError={(e) => {
+                                        if (e.currentTarget.src !== originalImage) {
+                                            console.log('Processed image failed, falling back to original');
+                                            e.currentTarget.src = originalImage;
+                                        } else {
+                                            console.log('Original image failed to load');
+                                            e.currentTarget.style.display = 'block';
+                                        }
+                                    }}
+                                />
                             </div>
-                        ) : null
-                    )}
+                        </div>
+                    ) : null}
                 </div>
 
                 {/* Name + Title */}

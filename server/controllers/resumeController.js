@@ -113,20 +113,37 @@ export const updateResume = async (req, res) => {
 
       const imageBufferData = fs.createReadStream(image.path)
       
-        const response = await imagekit.files.upload({
+        const uploadOptions = {
           file: imageBufferData,
           fileName: "resume.png",
           folder: "user-resumes",
-          transformation: {
-            pre: 'w-300, h-300, fo-face, z-0.75' + (removeBackground ? ',e-bgremove': '')
-          }
-        });
+        };
 
-        resumeDataCopy.personal_info.image = response.url
+        const response = await imagekit.files.upload(uploadOptions);
+
+        let finalImageUrl = response.url;
+        
+        if (removeBackground === 'yes' || removeBackground === true) {
+            finalImageUrl += "?tr=w-800:e-bgremove:w-300,h-300,fo-face,z-0.75:f-png,q-100";
+        } else {
+            finalImageUrl += "?tr=w-300,h-300,fo-face,z-0.75:f-png,q-100";
+        }
+
+        resumeDataCopy.personal_info.image = finalImageUrl;
 
          fs.unlink(image.path, (err) => {
         if(err) console.error('Temp file cleanup failed', err)
       })
+     } else if (resumeDataCopy.personal_info && typeof resumeDataCopy.personal_info.image === 'string' && resumeDataCopy.personal_info.image.includes('imagekit.io')) {
+        let existingUrl = resumeDataCopy.personal_info.image.split('?')[0];
+        
+        if (removeBackground === 'yes' || removeBackground === true) {
+            existingUrl += "?tr=w-800:e-bgremove:w-300,h-300,fo-face,z-0.75:f-png,q-100";
+        } else {
+            existingUrl += "?tr=w-300,h-300,fo-face,z-0.75:f-png,q-100";
+        }
+        
+        resumeDataCopy.personal_info.image = existingUrl;
      }
 
      const resume = await Resume.findOneAndUpdate({userId, _id: resumeId}, resumeDataCopy, {new: true})

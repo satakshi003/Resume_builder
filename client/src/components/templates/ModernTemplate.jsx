@@ -1,3 +1,4 @@
+import React from "react";
 import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
 const ModernTemplate = ({ data, accentColor }) => {
@@ -11,7 +12,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 	};
 
 	return (
-		<div className="max-w-4xl mx-auto bg-white text-gray-800">
+		<div className="w-full mx-auto bg-white text-gray-800">
 			{/* Header */}
 			<header className="p-8 text-white" style={{ backgroundColor: accentColor }}>
 				<h1 className="text-4xl font-light mb-3">
@@ -149,20 +150,19 @@ const ModernTemplate = ({ data, accentColor }) => {
 
 					{/* Skills */}
 					{data.skills && data.skills.length > 0 && (
-						<section>
+						<section className="h-full">
 							<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
 								Skills
 							</h2>
 
-							<div className="flex flex-wrap gap-2">
+							<div className="flex flex-wrap gap-x-2 gap-y-1 text-[13px] text-gray-700 leading-relaxed">
 								{data.skills.map((skill, index) => (
-									<span
-										key={index}
-										className="px-3 py-1 text-sm text-white rounded-full"
-										style={{ backgroundColor: accentColor }}
-									>
-										{skill}
-									</span>
+									<React.Fragment key={index}>
+										<span>{skill}</span>
+										{index < data.skills.length - 1 && (
+											<span className="text-gray-300 mx-0.5">•</span>
+										)}
+									</React.Fragment>
 								))}
 							</div>
 						</section>
