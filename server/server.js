@@ -9,7 +9,6 @@ import aiRouter from "./Routes/aiRoutes.js"
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-await connectDB();
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
@@ -47,6 +46,8 @@ app.use('/api/users', userRouter)
 app.use('/api/resumes', resumeRouter)
 app.use('/api/ai', aiRouter)
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-})
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+startServer();
