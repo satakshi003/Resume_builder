@@ -14,7 +14,7 @@ const Footer = () => {
   const connectLinks = [
     { label: "GitHub Repository", href: "https://github.com/satakshi003" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/satakshi-subhasmita-7a9886202" },
-    { label: "Contact", href: "mailto:contact@resumeai.com" },
+    { label: "Contact", href: "mailto:soumya3955@gmail.com" },
   ];
 
   const techStack = [
@@ -28,7 +28,7 @@ const Footer = () => {
   const socials = [
     { label: "GitHub", href: "https://github.com/satakshi003", icon: Github },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/satakshi-subhasmita-7a9886202", icon: Linkedin },
-    { label: "Portfolio", href: "#", icon: Globe },
+    { label: "Portfolio", href: "https://react-portfolio-v2-eight.vercel.app", icon: Globe },
   ];
 
   return (
@@ -44,10 +44,8 @@ const Footer = () => {
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-6">
                 <Link to="/" className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
-                        <FileText className="w-5.5 h-5.5 text-white" />
-                    </div>
-                    <span className="text-xl font-black font-heading text-gray-900 tracking-tight">ResumeAI</span>
+                    <img src="/shield.png" alt="VeloraCV Shield" className="h-8 w-auto object-contain" />
+                    <span className="text-xl font-black font-heading text-gray-900 tracking-tight">VeloraCV</span>
                 </Link>
                 <p className="text-base text-gray-500 font-medium leading-relaxed max-w-sm">
                     A modern resume builder focused on customization, simplicity, and practical AI assistance. Built for students and developers.
@@ -104,12 +102,9 @@ const Footer = () => {
         <div className="pt-10 border-t border-gray-50 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-8 order-2 md:order-1">
                 <p className="text-xs font-bold text-gray-300 uppercase tracking-widest leading-none">
-                    © {currentYear} ResumeAI
+                    © {currentYear} VeloraCV
                 </p>
-                <div className="flex items-center gap-6">
-                    <a href="#" className="text-[10px] font-black text-gray-300 hover:text-gray-900 uppercase tracking-widest transition-colors">Privacy</a>
-                    <a href="#" className="text-[10px] font-black text-gray-300 hover:text-gray-900 uppercase tracking-widest transition-colors">Terms</a>
-                </div>
+               
             </div>
 
             {/* Social Icons */}

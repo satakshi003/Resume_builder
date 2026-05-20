@@ -6,6 +6,8 @@ import pdfToText from 'react-pdftotext'
 import api from '../configs/api'
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
+import ConfirmModal from '../components/common/ConfirmModal'
+
 
 const Dashboard = () => {
 
@@ -18,6 +20,8 @@ const Dashboard = () => {
   const [title, setTitle] = useState('')
   const [resume, setResume] = useState(null)
   const [editResumeId, seteditResumeId] = useState('')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [resumeToDeleteId, setResumeToDeleteId] = useState(null)
 
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
@@ -73,16 +77,22 @@ const Dashboard = () => {
     }
   }
 
-  const deleteResume = async (resumeId) => {
-    try{
-      const confirm = window.confirm('Are you sure you want to delete this resume?')
-    if(confirm){
-      const {data} = await api.delete(`/api/resumes/delete/${resumeId}`)
-      setAllResumes(allResumes.filter(resume => resume._id !== resumeId ))
+  const deleteResume = (resumeId) => {
+    setResumeToDeleteId(resumeId)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!resumeToDeleteId) return
+    try {
+      const { data } = await api.delete(`/api/resumes/delete/${resumeToDeleteId}`)
+      setAllResumes(allResumes.filter(resume => resume._id !== resumeToDeleteId))
       toast.success(data.message)
-    }
-    }catch(error){
-       toast.error(error?.response?.data?.message || error.message)
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+    } finally {
+      setIsDeleteModalOpen(false)
+      setResumeToDeleteId(null)
     }
   }
 
@@ -403,6 +413,20 @@ const Dashboard = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Resume?"
+        message="Are you sure you want to permanently delete this resume? This action cannot be undone."
+        confirmText="Delete Resume"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => {
+          setIsDeleteModalOpen(false)
+          setResumeToDeleteId(null)
+        }}
+        isDanger
+      />
 
     </div>
   )

@@ -325,9 +325,7 @@ export const Hero = () => {
       {/* Navbar */}
       <nav className="relative z-50 flex items-center justify-between w-full py-5 px-6 md:px-12 lg:px-24 text-sm border-b border-gray-100 bg-white/70 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center shadow-lg shadow-gray-200">
-              <FileText className="w-5.5 h-5.5 text-white" />
-          </div>
+          <img src="/shield.png" alt="VeloraCV Shield" className="h-10 w-auto object-contain" />
           <span className="font-bold text-xl font-heading tracking-tight text-gray-900">VeloraCV</span>
         </Link>
 
@@ -340,7 +338,7 @@ export const Hero = () => {
         <div className="flex gap-4">
             {!user ? (
               <>
-                <Link to='/login' className="hidden md:flex items-center font-bold text-gray-900 hover:text-brand-600 transition-colors">Sign in</Link>
+                
                 <Link to='/login' className="hidden md:flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-900 text-white font-bold hover:bg-black transition-all shadow-xl shadow-gray-200">
                     Get Started
                 </Link>
@@ -392,7 +390,7 @@ export const Hero = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex justify-center items-center mb-28"
         >
-          <Link to='/login' className="group flex items-center gap-4 px-9 py-4.5 rounded-2xl bg-gray-900 text-white font-bold hover:bg-black transition-all shadow-2xl shadow-gray-200">
+          <Link to={user ? "/app" : "/login"} className="group flex items-center gap-4 px-9 py-4.5 rounded-2xl bg-gray-900 text-white font-bold hover:bg-black transition-all shadow-2xl shadow-gray-200">
             Start Building Now
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>

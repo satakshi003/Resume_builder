@@ -44,10 +44,7 @@ const Navbar = () => {
             {/* Brand / Logo */}
             <div className="flex items-center gap-10">
               <Link to='/' className="flex items-center gap-3 group outline-none">
-                <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-[0_2px_10px_rgba(99,102,241,0.2)] group-hover:shadow-[0_8px_20px_rgba(99,102,241,0.3)] group-hover:-translate-y-0.5 transition-all duration-300">
-                  <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Sparkles className="w-5 h-5 text-white relative z-10" />
-                </div>
+                <img src="/shield.png" alt="VeloraCV Shield" className="h-10 w-auto object-contain" />
                 <span className="text-xl font-bold font-heading tracking-tight text-gray-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-600 group-hover:to-violet-600 transition-all duration-300">
                   VeloraCV
                 </span>
@@ -56,10 +53,6 @@ const Navbar = () => {
               {/* Desktop Nav Links */}
               {user && (
                 <nav className="hidden md:flex items-center gap-8">
-                  <Link to="/" className="text-sm font-medium text-text-secondary hover:text-brand-600 transition-colors flex items-center gap-2 group outline-none">
-                    <LayoutDashboard className="w-4 h-4 text-gray-400 group-hover:text-brand-500 transition-colors" />
-                    Dashboard
-                  </Link>
                   
                 </nav>
               )}
@@ -134,10 +127,7 @@ const Navbar = () => {
               
               <div className="h-px w-full bg-gray-100 my-2"></div>
               
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors">
-                <LayoutDashboard className="w-5 h-5 text-gray-400" />
-                Dashboard
-              </Link>
+
 
               <Link to="/templates" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors">
                 <FileText className="w-5 h-5 text-gray-400" />

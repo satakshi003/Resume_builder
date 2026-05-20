@@ -259,7 +259,7 @@ const Pricing = () => (
           className="text-4xl md:text-5xl font-black font-heading text-gray-900 tracking-tight mb-5"
         >
           What's inside <span className="relative inline-block">
-            ResumeAI
+            VeloraCV
             <svg className="absolute -bottom-2 left-0 w-full h-2 text-brand-200/60" viewBox="0 0 100 10" preserveAspectRatio="none">
               <path d="M0 5 Q 25 0 50 5 T 100 5" fill="none" stroke="currentColor" strokeWidth="4" />
             </svg>

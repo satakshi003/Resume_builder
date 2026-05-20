@@ -50,10 +50,8 @@ const Login = () => {
             
             <div className="relative z-10 w-full flex flex-col justify-center px-16 xl:px-24">
                 <Link to="/" className="flex items-center gap-2.5 mb-14 group w-fit">
-                    <div className="w-9 h-9 rounded-xl bg-gray-900 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-                        <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="font-bold text-xl font-heading tracking-tight text-gray-900">ResumeAI</span>
+                    <img src="/shield.png" alt="VeloraCV Shield" className="h-14 w-auto object-contain" />
+                    <span className="font-bold text-xl font-heading tracking-tight text-gray-900">VeloraCV</span>
                 </Link>
 
                 <motion.div
@@ -158,10 +156,8 @@ const Login = () => {
             <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-brand-500/5 to-transparent pointer-events-none" />
             
             <Link to="/" className="lg:hidden absolute top-8 left-8 flex items-center gap-2 group">
-                <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center shadow-md">
-                    <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-bold text-lg font-heading tracking-tight text-gray-900">ResumeAI</span>
+                <img  src="/shield.png" alt="VeloraCV Shield" className="h-9 w-9 object-contain" />
+                <span className="font-bold text-lg font-heading tracking-tight text-gray-900">VeloraCV</span>
             </Link>
 
             <motion.div 
@@ -276,7 +272,7 @@ const Login = () => {
                 </form>
 
                 <p className="text-center text-sm text-gray-500 mt-12">
-                    {state === "login" ? "New to ResumeAI?" : "Existing user?"}
+                    {state === "login" ? "New to VeloraCV?" : "Existing user?"}
                     <button 
                         type="button" 
                         onClick={() => setState(prev => prev === "login" ? "register" : "login")} 
