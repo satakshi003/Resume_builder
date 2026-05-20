@@ -267,7 +267,7 @@ const Dashboard = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={e => e.stopPropagation()} 
-              className='relative bg-white shadow-2xl rounded-[40px] w-full max-w-md p-12'
+              className='relative bg-white shadow-2xl rounded-[40px] w-full max-w-md p-12  max-h-[90vh] overflow-y-auto'
             >
               <div className="w-16 h-16 rounded-[24px] bg-brand-50 flex items-center justify-center text-brand-600 mb-8">
                 <Wand2 className="w-7 h-7" />
@@ -311,7 +311,7 @@ const Dashboard = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={e => e.stopPropagation()} 
-              className='relative bg-white shadow-2xl rounded-[40px] w-full max-w-md p-12'
+              className='relative bg-white shadow-2xl rounded-[40px]  max-h-[90vh] overflow-y-auto w-full max-w-md p-12'
             >
               <div className="w-16 h-16 rounded-[24px] bg-violet-50 flex items-center justify-center text-violet-600 mb-8">
                 <UploadCloud className="w-7 h-7" />
@@ -379,7 +379,7 @@ const Dashboard = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={e => e.stopPropagation()} 
-              className='relative bg-white shadow-2xl rounded-[40px] w-full max-w-md p-12'
+              className='relative bg-white shadow-2xl rounded-[40px]  max-h-[90vh] overflow-y-auto w-full max-w-md p-12'
             >
               <div className="w-16 h-16 rounded-[24px] bg-gray-50 flex items-center justify-center text-gray-400 mb-8">
                 <Pencil className="w-7 h-7" />

@@ -58,6 +58,7 @@ const ResumeBuilder = () => {
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0)
   const [removeBackground, setRemoveBackground] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const sections = [
     {id: "personal", name: "Personal Info", icon: User },
@@ -163,6 +164,13 @@ const ResumeBuilder = () => {
 
           {/* Right Section: Workspace Actions */}
           <div className='flex items-center justify-end gap-3 w-1/3'>
+           <button
+    onClick={() => setShowPreview(prev => !prev)}
+    className='lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-[12px] font-medium'
+  >
+    {showPreview ? <EyeOffIcon className='w-3.5 h-3.5' /> : <EyeIcon className='w-3.5 h-3.5' />}
+    {showPreview ? 'Edit' : 'Preview'}
+  </button>
             {/* Action Group: Sharing & Visibility */}
             <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200/60">
                <button 
@@ -197,10 +205,10 @@ const ResumeBuilder = () => {
         </header>
 
         {/* Main Workspace Split */}
-        <div className='flex-1 flex overflow-hidden'>
+        <div className='flex-1 flex flex-col lg:flex-row overflow-hidden'>
           
           {/* Left Panel - Sticky Editor */}
-          <div className='w-[420px] shrink-0 bg-white border-r border-gray-100 flex flex-col shadow-2xl shadow-gray-200/50 relative z-20 no-print'>
+          <div className={`${showPreview ? 'hidden' : 'flex flex-col'} lg:flex lg:flex-col w-full lg:w-[420px] shrink-0 bg-white border-r border-gray-100 shadow-2xl shadow-gray-200/50 relative z-20 no-print`}>
             
             {/* Form Section Navigation - Sticky Header */}
             <div className='px-6 pt-6 pb-4 border-b border-gray-100 bg-white sticky top-0 z-30'>
@@ -319,7 +327,7 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Right Panel - Preview Canvas */}
-          <div className='flex-1 bg-[#F1F3F6] overflow-y-auto flex flex-col items-center py-12 px-6 lg:px-12 custom-scrollbar relative'>
+          <div className={`${showPreview ? 'flex' : 'hidden'} lg:flex flex-1 bg-[#F1F3F6] overflow-y-auto flex-col items-center py-12 px-6 lg:px-12 custom-scrollbar relative`}>
              {/* Subtle Radial Workspace Gradient */}
              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent pointer-events-none" />
              
