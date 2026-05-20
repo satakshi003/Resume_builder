@@ -12,19 +12,20 @@ const PORT = process.env.PORT || 3000;
 await connectDB();
 
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'https://resume-builder-sepia-eight.vercel.app'
-  ];
-
   const origin = req.headers.origin;
 
-  if (allowedOrigins.includes(origin)) {
+  if (
+    origin === 'http://localhost:5173' ||
+    origin?.includes('.vercel.app')
+  ) {
     res.header('Access-Control-Allow-Origin', origin);
   }
 
   res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, OPTIONS'
+  );
   res.header(
     'Access-Control-Allow-Headers',
     'Content-Type, Authorization'
