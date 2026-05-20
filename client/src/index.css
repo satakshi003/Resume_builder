@@ -194,8 +194,8 @@ h1, h2, h3, h4, h5, h6 {
 
 @media print {
   @page {
-    size: A4;
-    margin: 0; /* Let CSS handle margins via padding on the wrapper for better control */
+    size: A4 portrait;
+    margin: 0;
   }
 
   /* Hide all UI elements marked with .no-print */
@@ -209,59 +209,81 @@ h1, h2, h3, h4, h5, h6 {
   .bg-brand-500\/5,
   .bg-violet-500\/5 {
     display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
   }
 
-  /* Reset main layout for a single-page document feel */
+  /* Force single page A4 layout */
   html, 
   body, 
   #root,
   .min-h-screen, 
+  .h-screen,
   .max-w-\[1600px\], 
-  .flex-1,
   .overflow-y-auto,
   main {
+    display: block !important;
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 210mm !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
     overflow: visible !important;
     position: static !important;
-    display: block !important;
     box-shadow: none !important;
     transform: none !important;
     zoom: 1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  /* Resume Area: Match A4 Proportions exactly and prevent shrinking */
-  .resume-print-wrapper {
-    position: relative !important;
+  /* Resume Area: Strict A4 Proportions */
+  .resume-print-wrapper, .a4-container, .resume-page {
     width: 210mm !important;
     min-height: 297mm !important;
+    height: auto !important;
+    background: white !important;
+    position: relative !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
-    background: white !important;
     transform: none !important;
+    scale: 1 !important;
     zoom: 1 !important;
     display: block !important;
-    overflow: visible !important;
-    max-width: none !important; /* Remove screen-size constraints */
+    max-width: none !important; 
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  /* Ensure natural flow without forced breaks */
-  .resume-print-wrapper section,
-  .resume-print-wrapper .experience-item,
-  .resume-print-wrapper .education-item,
-  .resume-print-wrapper .project-item {
-    page-break-inside: auto !important;
-    break-inside: auto !important;
+  .experience-item,
+  .education-item,
+  .project-item,
+  .skill-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
     transform: none !important;
+  }
+
+  /* Prevent section headers from being orphaned at the bottom of a page */
+  .prevent-orphan,
+  h2, h3 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .photo-accent-circle {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .template-right-column {
+    padding-left: 3rem !important; /* 48px to match pl-12 */
+    padding-right: 2rem !important; /* 32px to match pr-8 */
+    padding-bottom: 2rem !important; /* 32px to match pb-8 */
+    padding-top: 0 !important;
   }
 
   /* Typography preservation and high-fidelity colors */

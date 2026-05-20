@@ -1,6 +1,8 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import React from "react";
+import { Mail, Phone, MapPin, User } from "lucide-react";
+import { getProcessedProfileImage } from "../../utils/imageHelper";
 
-const MinimalImageTemplate = ({ data, accentColor }) => {
+const MinimalImageTemplate = ({ data, accentColor, removeBackground }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const [year, month] = dateStr.split("-");
@@ -10,27 +12,24 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
         });
     };
 
-    const { processedImage, originalImage } = React.useMemo(() => {
-        const image = data?.personal_info?.image;
-        if (!image) return { processedImage: null, originalImage: null };
-        
-        let processed = null;
-        let original = null;
-        
-        if (typeof image === 'string') {
-            processed = image;
-            original = image.split('?')[0].replace(/\/tr:[^/]+\//, '/');
-        } else {
-            processed = URL.createObjectURL(image);
-            original = processed;
-        }
-        
-        console.log('originalImage:', original);
-        console.log('processedImage:', processed);
-        console.log('removeBackgroundResponse:', processed);
-        
-        return { processedImage: processed, originalImage: original };
-    }, [data?.personal_info?.image]);
+    const [originalImage, setOriginalImage] = React.useState(null);
+    const [processedImage, setProcessedImage] = React.useState(null);
+    const [useBackgroundRemoved, setUseBackgroundRemoved] = React.useState(false);
+
+    // Refs so onError always reads live values, never a stale closure
+    const processedImageRef = React.useRef(null);
+    const useBackgroundRemovedRef = React.useRef(false);
+
+    React.useEffect(() => {
+        const { processedImage: processed, originalImage: original } = getProcessedProfileImage(data?.personal_info?.image, removeBackground);
+        setOriginalImage(original);
+        const nextProcessed = removeBackground ? processed : null;
+        setProcessedImage(nextProcessed);
+        processedImageRef.current = nextProcessed;
+        const nextUse = !!removeBackground;
+        setUseBackgroundRemoved(nextUse);
+        useBackgroundRemovedRef.current = nextUse;
+    }, [data?.personal_info?.image, removeBackground]);
 
     return (
         <div className="max-w-5xl mx-auto bg-white text-zinc-800">
@@ -38,34 +37,41 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                 <div className="col-span-1  py-10">
                     {/* Image */}
-                    {processedImage ? (
+                    {originalImage ? (
                         <div className="mb-6 flex justify-center">
                             <div 
-                                className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center" 
+                                className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center bg-zinc-100" 
                                 style={{ 
-                                    backgroundColor: accentColor,
+                                    backgroundColor: originalImage ? (accentColor || '#F4F4F5') : '#F4F4F5',
                                     isolation: 'isolate'
                                 }}
                             >
-                                <img 
-                                    src={processedImage || originalImage} 
-                                    alt="Profile" 
-                                    className="w-full h-full object-cover" 
-                                    style={{ 
-                                        background: 'transparent',
-                                        mixBlendMode: 'normal',
-                                        display: 'block'
-                                    }} 
-                                    onError={(e) => {
-                                        if (e.currentTarget.src !== originalImage) {
-                                            console.log('Processed image failed, falling back to original');
-                                            e.currentTarget.src = originalImage;
-                                        } else {
-                                            console.log('Original image failed to load');
-                                            e.currentTarget.style.display = 'block';
-                                        }
-                                    }}
-                                />
+                                {originalImage ? (
+                                    <img 
+                                        src={useBackgroundRemoved && processedImage ? processedImage : originalImage} 
+                                        alt="Profile" 
+                                        className="w-full h-full object-cover" 
+                                        style={{ 
+                                            background: 'transparent',
+                                            mixBlendMode: 'normal',
+                                            display: 'block',
+                                            objectPosition: 'center'
+                                        }} 
+                                        onError={() => {
+                                            if (useBackgroundRemovedRef.current && processedImageRef.current) {
+                                                processedImageRef.current = null;
+                                                useBackgroundRemovedRef.current = false;
+                                                setProcessedImage(null);
+                                                setUseBackgroundRemoved(false);
+                                            }
+                                            // originalImage is NEVER cleared here — only by explicit user action
+                                        }}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                                        <User className="w-16 h-16" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : null}

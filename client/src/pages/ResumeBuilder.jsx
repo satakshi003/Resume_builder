@@ -38,7 +38,14 @@ const ResumeBuilder = () => {
     try{
       const {data} = await api.get('/api/resumes/get/' + resumeId)
       if(data.resume){
-        setResumeData(data.resume)
+        const mappedResume = {
+          ...data.resume,
+          accent_color: data.resume.accent_color || data.resume.theme_color || "#3B82F6"
+        };
+        setResumeData(mappedResume);
+        const hasBgRemoved = typeof data.resume.personal_info?.image === 'string' && 
+                             data.resume.personal_info.image.includes('e-bgremove');
+        setRemoveBackground(hasBgRemoved);
         document.title = data.resume.title;
       }
     }catch(error){
@@ -110,7 +117,13 @@ const ResumeBuilder = () => {
 
       const {data} = await api.put('/api/resumes/update', formData)
 
-      setResumeData(data.resume)
+      if (data.resume) {
+        const mappedResume = {
+          ...data.resume,
+          accent_color: data.resume.accent_color || data.resume.theme_color || "#3B82F6"
+        };
+        setResumeData(mappedResume);
+      }
       toast.success(data.message)
     }catch(error){
       console.error("Error saving resume:", error)
@@ -126,49 +139,57 @@ const ResumeBuilder = () => {
 
       <div className='max-w-[1600px] mx-auto h-screen flex flex-col relative z-10'>
         
-        {/* Top Header - Professional Integrated Toolbar */}
-        <header className='h-[64px] shrink-0 flex items-center justify-between px-6 bg-white/80 backdrop-blur-xl border-b border-gray-100 no-print sticky top-0 z-40 shadow-[0_1px_2px_rgba(0,0,0,0.02)]'>
-          {/* Left Section: Context & Navigation */}
-          <div className='flex items-center gap-5'>
+        {/* Top Header - Professional Editor Toolbar */}
+        <header className='h-[56px] shrink-0 flex items-center justify-between px-6 bg-white border-b border-gray-200 no-print sticky top-0 z-40'>
+          {/* Left Section: Navigation & Title */}
+          <div className='flex items-center gap-4 w-1/3'>
             <Link 
               to={'/app'} 
-              className='flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold text-[13px] transition-all group'
+              className='flex items-center gap-1.5 text-gray-400 hover:text-gray-900 font-medium text-[13px] transition-colors group'
             >
-              <ArrowLeftIcon className='w-5 h-5 group-hover:-translate-x-0.5 transition-transform' /> 
+              <ArrowLeftIcon className='w-4 h-4 group-hover:-translate-x-0.5 transition-transform' /> 
               Back
             </Link>
             <div className='h-4 w-px bg-gray-200' />
-            <h1 className='text-[16px] font-black text-gray-900 tracking-tight line-clamp-1 max-w-[250px]'>
+            <h1 className='text-[14px] font-semibold text-gray-900 tracking-tight truncate'>
               {resumeData.title || 'Untitled Resume'}
             </h1>
           </div>
 
+          {/* Center Section */}
+          <div className='flex items-center justify-center w-1/3'>
+            {/* Kept empty to maintain balanced 3-column layout */}
+          </div>
+
           {/* Right Section: Workspace Actions */}
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center justify-end gap-3 w-1/3'>
             {/* Action Group: Sharing & Visibility */}
-            <div className="flex items-center gap-1.5 bg-gray-100/50 p-1 rounded-xl border border-gray-100">
+            <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-lg border border-gray-200/60">
                <button 
                  onClick={changeResumeVisibility}
-                 className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-[11px] font-black transition-all ${
+                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
                    resumeData.public 
-                     ? 'bg-white text-brand-600 shadow-sm border border-brand-100 ring-4 ring-brand-500/5' 
-                     : 'text-gray-500 hover:text-gray-900'
+                     ? 'bg-white text-gray-900 shadow-sm ring-1 ring-gray-900/5' 
+                     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100/50'
                  }`}
                >
-                 {resumeData.public ? <EyeIcon className='w-3.5 h-3.5' /> : <EyeOffIcon className='w-3.5 h-3.5' />}
+                 {resumeData.public ? <EyeIcon className='w-3.5 h-3.5 text-brand-600' /> : <EyeOffIcon className='w-3.5 h-3.5' />}
                  {resumeData.public ? 'Public' : 'Private'}
                </button>
                {resumeData.public && (
-                 <button onClick={handleShare} className='flex items-center gap-2 px-4 py-1.5 rounded-lg text-[11px] font-black text-gray-500 hover:text-gray-900 hover:bg-white/50 transition-all'>
-                   <Share2Icon className='w-3.5 h-3.5' /> Share
-                 </button>
+                 <>
+                   <div className='w-px h-4 bg-gray-200 mx-0.5' />
+                   <button onClick={handleShare} className='flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100/50 transition-colors'>
+                     <Share2Icon className='w-3.5 h-3.5' /> Share
+                   </button>
+                 </>
                )}
             </div>
 
             {/* Primary Action: Export */}
             <button 
               onClick={downloadResume}
-              className='flex items-center gap-2.5 px-6 py-2.5 bg-gray-900 text-white rounded-xl text-[12px] font-black hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-500/20 transition-all active:scale-95'
+              className='flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-[13px] font-medium hover:bg-gray-800 transition-colors shadow-sm active:scale-95'
             >
               <DownloadCloud className='w-4 h-4' /> Download PDF
             </button>
@@ -304,7 +325,7 @@ const ResumeBuilder = () => {
              
              {/* Preview Container - A4 Constraints with High Fidelity Shadow */}
              <div className='w-full max-w-[820px] resume-print-wrapper a4-container transition-all duration-500 relative z-10 mb-20'>
-                <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} />
+                <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} removeBackground={removeBackground} />
              </div>
 
           </div>

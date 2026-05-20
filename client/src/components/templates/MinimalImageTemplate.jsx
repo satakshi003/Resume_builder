@@ -1,7 +1,8 @@
 import React from "react";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, User } from "lucide-react";
+import { getProcessedProfileImage } from "../../utils/imageHelper";
 
-const MinimalImageTemplate = ({ data, accentColor }) => {
+const MinimalImageTemplate = ({ data, accentColor, removeBackground }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const [year, month] = dateStr.split("-");
@@ -11,27 +12,24 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
         });
     };
 
-    const { processedImage, originalImage } = React.useMemo(() => {
-        const image = data?.personal_info?.image;
-        if (!image) return { processedImage: null, originalImage: null };
-        
-        let processed = null;
-        let original = null;
-        
-        if (typeof image === 'string') {
-            processed = image;
-            original = image.split('?')[0].replace(/\/tr:[^/]+\//, '/');
-        } else {
-            processed = URL.createObjectURL(image);
-            original = processed;
-        }
-        
-        console.log('originalImage:', original);
-        console.log('processedImage:', processed);
-        console.log('removeBackgroundResponse:', processed);
-        
-        return { processedImage: processed, originalImage: original };
-    }, [data?.personal_info?.image]);
+    const [originalImage, setOriginalImage] = React.useState(null);
+    const [processedImage, setProcessedImage] = React.useState(null);
+    const [useBackgroundRemoved, setUseBackgroundRemoved] = React.useState(false);
+
+    // Refs so onError always reads live values, never a stale closure
+    const processedImageRef = React.useRef(null);
+    const useBackgroundRemovedRef = React.useRef(false);
+
+    React.useEffect(() => {
+        const { processedImage: processed, originalImage: original } = getProcessedProfileImage(data?.personal_info?.image, removeBackground);
+        setOriginalImage(original);
+        const nextProcessed = removeBackground ? processed : null;
+        setProcessedImage(nextProcessed);
+        processedImageRef.current = nextProcessed;
+        const nextUse = !!removeBackground;
+        setUseBackgroundRemoved(nextUse);
+        useBackgroundRemovedRef.current = nextUse;
+    }, [data?.personal_info?.image, removeBackground]);
 
     return (
         <div className="w-full mx-auto bg-white text-zinc-800 p-8 lg:p-12">
@@ -39,35 +37,44 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                 <div className="col-span-1  py-10">
                     {/* Image */}
-                    {processedImage ? (
+                    {originalImage ? (
                         <div className="mb-6 flex justify-center">
-                            <div 
-                                className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center" 
-                                style={{ 
-                                    backgroundColor: accentColor,
-                                    isolation: 'isolate'
-                                }}
-                            >
-                                <img 
-                                    src={processedImage || originalImage} 
-                                    alt="Profile" 
-                                    className="w-full h-full object-cover" 
+                            <div className="relative w-32 h-32 rounded-full overflow-hidden flex items-center justify-center photo-wrapper">
+                                <div 
+                                    className="absolute inset-0 rounded-full photo-accent-circle"
                                     style={{ 
-                                        background: 'transparent',
-                                        mixBlendMode: 'normal',
-                                        display: 'block'
-                                    }} 
-                                    onError={(e) => {
-                                        if (e.currentTarget.src !== originalImage) {
-                                            console.log('Processed image failed, falling back to original');
-                                            e.currentTarget.src = originalImage;
-                                        } else {
-                                            console.log('Original image failed to load');
-                                            // Fallback to ensuring it is visible at least even if broken
-                                            e.currentTarget.style.display = 'block';
-                                        }
+                                        backgroundColor: originalImage ? (accentColor || '#F4F4F5') : '#F4F4F5',
+                                        zIndex: 0,
+                                        WebkitPrintColorAdjust: 'exact',
+                                        printColorAdjust: 'exact'
                                     }}
                                 />
+                                {originalImage ? (
+                                    <img 
+                                        src={useBackgroundRemoved && processedImage ? processedImage : originalImage} 
+                                        alt="Profile" 
+                                        className="relative z-10 w-full h-full object-cover" 
+                                        style={{ 
+                                            background: 'transparent',
+                                            mixBlendMode: 'normal',
+                                            display: 'block',
+                                            objectPosition: 'center'
+                                        }} 
+                                        onError={() => {
+                                            if (useBackgroundRemovedRef.current && processedImageRef.current) {
+                                                processedImageRef.current = null;
+                                                useBackgroundRemovedRef.current = false;
+                                                setProcessedImage(null);
+                                                setUseBackgroundRemoved(false);
+                                            }
+                                            // originalImage is NEVER cleared here — only by explicit user action
+                                        }}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                                        <User className="w-16 h-16" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : null}
@@ -122,7 +129,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             </h2>
                             <div className="space-y-4 text-sm">
                                 {data.education.map((edu, index) => (
-                                    <div key={index}>
+                                    <div key={index} className="education-item">
                                         <p className="font-semibold uppercase">{edu.degree}</p>
                                         <p className="text-zinc-600">{edu.institution}</p>
                                         <p className="text-xs text-zinc-500">
@@ -142,7 +149,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             </h2>
                             <ul className="space-y-1 text-sm">
                                 {data.skills.map((skill, index) => (
-                                    <li key={index}>{skill}</li>
+                                    <li key={index} className="skill-item">{skill}</li>
                                 ))}
                             </ul>
                         </section>
@@ -150,7 +157,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                 </aside>
 
                 {/* Right Content */}
-                <main className="col-span-2 p-8 pt-0">
+                <main className="col-span-2 pl-12 pr-8 pb-8 pt-0 template-right-column">
 
                     {/* Summary */}
                     {data.professional_summary && (
@@ -172,7 +179,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             </h2>
                             <div className="space-y-6 mb-8">
                                 {data.experience.map((exp, index) => (
-                                    <div key={index}>
+                                    <div key={index} className="experience-item">
                                         <div className="flex justify-between items-center">
                                             <h3 className="font-semibold text-zinc-900">
                                                 {exp.position}
@@ -206,7 +213,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             </h2>
                             <div className="space-y-4">
                                 {data.project.map((project, index) => (
-                                    <div key={index}>
+                                    <div key={index} className="project-item">
                                         <h3 className="text-md font-medium text-zinc-800 mt-3">{project.name}</h3>
                                         <p className="text-sm mb-1" style={{ color: accentColor }} >
                                             {project.type}

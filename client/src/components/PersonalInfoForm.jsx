@@ -1,31 +1,27 @@
 import { BriefcaseBusiness, Globe, Linkedin, Mail, MapPin, Phone, User, Camera, Trash2 } from "lucide-react";
 import React from "react";
+import { getProcessedProfileImage } from "../utils/imageHelper";
+import toast from "react-hot-toast";
 
 const PersonalInfoForm = ({data, onChange, removeBackground, setRemoveBackground, accentColor = "#3B82F6"}) => {
-  const { processedImage, originalImage } = React.useMemo(() => {
-      const image = data?.image;
-      if (!image) return { processedImage: null, originalImage: null };
-      
-      let processed = null;
-      let original = null;
-      
-      if (typeof image === 'string') {
-          original = image.split('?')[0].replace(/\/tr:[^/]+\//, '/');
-          if (removeBackground) {
-              processed = original + "?tr=w-800,e-bgremove,w-300,h-300,fo-face,z-0.75,f-png,q-100";
-          } else {
-              processed = original + "?tr=w-300,h-300,fo-face,z-0.75,f-png,q-100";
-          }
-      } else {
-          processed = URL.createObjectURL(image);
-          original = processed;
-      }
-      
-      console.log('originalImage:', original);
-      console.log('processedImage:', processed);
-      console.log('removeBackgroundResponse:', processed);
-      
-      return { processedImage: processed, originalImage: original };
+  const [originalImage, setOriginalImage] = React.useState(null);
+  const [processedImage, setProcessedImage] = React.useState(null);
+  const [useBackgroundRemoved, setUseBackgroundRemoved] = React.useState(false);
+
+  // Refs that shadow state so onError always reads the live value (not a stale closure)
+  const processedImageRef = React.useRef(null);
+  const useBackgroundRemovedRef = React.useRef(false);
+
+  React.useEffect(() => {
+      const { processedImage: processed, originalImage: original } = getProcessedProfileImage(data?.image, removeBackground);
+      // originalImage is only set from data; never overwritten by bg-removal logic
+      setOriginalImage(original);
+      const nextProcessed = removeBackground ? processed : null;
+      setProcessedImage(nextProcessed);
+      processedImageRef.current = nextProcessed;
+      const nextUse = !!removeBackground;
+      setUseBackgroundRemoved(nextUse);
+      useBackgroundRemovedRef.current = nextUse;
   }, [data?.image, removeBackground]);
 
   const handleChange = (field, value ) => {
@@ -42,6 +38,9 @@ const PersonalInfoForm = ({data, onChange, removeBackground, setRemoveBackground
     {key: "website", label: "Personal Website", icon: Globe, type: "url"}
   ]
 
+  // Display: bg-removed version when active and loaded, else always fall back to original
+  const displaySrc = useBackgroundRemoved && processedImage ? processedImage : originalImage;
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div>
@@ -52,31 +51,40 @@ const PersonalInfoForm = ({data, onChange, removeBackground, setRemoveBackground
       {/* Modern Compact Photo Upload */}
       <div className="bg-gray-50/50 rounded-2xl p-5 border border-gray-100 flex items-center gap-6 group/upload">
         <div className="relative shrink-0">
-          {processedImage ? (
+          {originalImage ? (
             <div 
               className="w-20 h-20 rounded-full overflow-hidden shadow-md border-2 border-white ring-4 ring-gray-100/50 flex items-center justify-center"
               style={{ 
-                  backgroundColor: accentColor,
+                  backgroundColor: accentColor || '#3B82F6',
                   isolation: 'isolate'
               }}
             >
               <img 
-                src={processedImage || originalImage} 
+                src={displaySrc} 
                 alt="Profile" 
                 className="w-full h-full object-cover" 
                 style={{ 
                     background: 'transparent',
                     mixBlendMode: 'normal',
-                    display: 'block'
+                    display: 'block',
+                    objectPosition: 'center'
                 }} 
-                onError={(e) => {
-                    if (e.currentTarget.src !== originalImage) {
-                        console.log('Processed image failed, falling back to original');
-                        e.currentTarget.src = originalImage;
-                    } else {
-                        console.log('Original image failed to load');
-                        e.currentTarget.style.display = 'block';
+                onError={() => {
+                    // Read refs — always live, never stale — to decide what failed
+                    if (useBackgroundRemovedRef.current && processedImageRef.current) {
+                        // The bg-removed URL failed to load.
+                        // Disable bg removal; keep originalImage 100% untouched.
+                        toast.error("Background removal unavailable for this image");
+                        processedImageRef.current = null;
+                        useBackgroundRemovedRef.current = false;
+                        setProcessedImage(null);
+                        setUseBackgroundRemoved(false);
+                        if (typeof setRemoveBackground === 'function') {
+                            setRemoveBackground(false);
+                        }
                     }
+                    // If the original URL itself errors (e.g. CORS/network): do nothing.
+                    // originalImage is ONLY cleared via the explicit "Remove" button.
                 }}
               />
             </div>
@@ -97,7 +105,7 @@ const PersonalInfoForm = ({data, onChange, removeBackground, setRemoveBackground
             <p className="text-[11px] text-gray-400 font-medium">JPG or PNG. Max 2MB.</p>
           </div>
           
-          {typeof data.image === 'object' && (
+          {data.image && (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2.5">
                 <label className="relative inline-flex items-center cursor-pointer">

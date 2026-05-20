@@ -15,7 +15,13 @@ const Preview = () => {
   const loadResume = async () => {
     try{
       const {data} = await api.get('/api/resumes/public/' + resumeId)
-      setResumeData(data.resume)
+      if (data.resume) {
+        const mappedResume = {
+          ...data.resume,
+          accent_color: data.resume.accent_color || data.resume.theme_color || "#3B82F6"
+        };
+        setResumeData(mappedResume);
+      }
     }catch(error){
       console.log(error.message);
     }

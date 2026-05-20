@@ -4,7 +4,7 @@ import ModernTemplate from './templates/ModernTemplate'
 import MinimalTemplate from './templates/MinimalTemplate'
 import MinimalImageTemplate from './templates/MinimalImageTemplate'
 
-const ResumePreview = ({data, template, accentColor, classes = ""}) => {
+const ResumePreview = ({data, template, accentColor, classes = "", removeBackground}) => {
 
   const renderTemplate = () => {
     switch (template) {
@@ -13,7 +13,7 @@ const ResumePreview = ({data, template, accentColor, classes = ""}) => {
       case "minimal":
         return <MinimalTemplate data={data} accentColor={accentColor} />;
       case "minimal-image":
-        return <MinimalImageTemplate data={data} accentColor={accentColor} />;
+        return <MinimalImageTemplate data={data} accentColor={accentColor} removeBackground={removeBackground} />;
         
         default:
           return  <ClassicTemplate data={data} accentColor={accentColor} />;
