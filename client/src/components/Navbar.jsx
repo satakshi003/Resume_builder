@@ -121,7 +121,7 @@ const Navbar = () => {
                 </div>
                 <div>
                   <p className="text-base font-semibold text-gray-900">{user.username}</p>
-                  <p className="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-md inline-block mt-1">Premium Plan</p>
+                  
                 </div>
               </div>
               
@@ -129,10 +129,7 @@ const Navbar = () => {
               
 
 
-              <Link to="/templates" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors">
-                <FileText className="w-5 h-5 text-gray-400" />
-                Templates
-              </Link>
+              
               
               <button 
                 onClick={() => {
