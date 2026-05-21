@@ -14,7 +14,7 @@ const Preview = () => {
 
   const loadResume = async () => {
     try{
-      const {data} = await api.get('/api/resumes/public/' + resumeId)
+      const {data} = await api.get('/api/resumes/public/${resumeId}' + resumeId)
       if (data.resume) {
         const mappedResume = {
           ...data.resume,
